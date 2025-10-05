@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Oct  4 03:19:50 2025
-
-@author: kessa
-"""
-
-# Project1
+# Step 1: Data Processing
+import pandas as pd
+data = pd.read_csv("Project 1 Data.csv")
