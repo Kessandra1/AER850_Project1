@@ -33,3 +33,16 @@ plt.ylabel('Coordinate Value')
 plt.legend()
 plt.grid(True)
 plt.show()
+
+# Step 3: Correlation Analysis
+print("\n-----Step 3: Correlation Analysis-----")
+import seaborn as sns
+# Looking at the colinearity of variables
+corr_matrix = data.corr()
+# Plot the correlation matrix
+plt.title("Correlation Matrix")
+sns.heatmap(np.abs(corr_matrix))
+# Each feature's (X, Y, and Z) correlation with the target variable (Step)
+step_corr = corr_matrix['Step'].drop('Step')
+print("\nCorrelation of each feature with 'Step':")
+print(step_corr)
