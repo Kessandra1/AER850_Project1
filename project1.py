@@ -3,9 +3,11 @@ import pandas as pd
 data = pd.read_csv("Project 1 Data.csv")
 
 # Step 2: Data Visualization
+print("\n-----Step 2: Data Visualization-----")
 import numpy as np
 import matplotlib.pyplot as plt
 # Some quick look at the data
+print("\nFirst 5 rows of data:")
 print(data.head())
 print(data.columns)
 # Histogram of Samples per Step
@@ -13,6 +15,9 @@ plt.title('Samples per Step')
 plt.xlabel('Step')
 plt.ylabel('Samples')
 data['Step'].hist(bins=13, linewidth=0.5, edgecolor="white")
+# Total number of samples (using X column to count)
+total_samples = np.size(data[['X']].values)
+print("\nTotal number of coordinate values:", total_samples)
 # Grouping and Info
 grouped_data = data.groupby('Step').agg(['min', 'max'])
 print("\nGrouped DataFrame with min & max values:")
