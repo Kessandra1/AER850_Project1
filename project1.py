@@ -195,3 +195,43 @@ plt.title("Confusion Matrix for Model 3 (Random Forest)")
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
 plt.show()
+
+
+
+
+# Step 6: Stacked Model Performance Analysis
+print("\n-----Step 6: Stacked Model Performance Analysis-----")
+ 
+# Using StackingClassifier, combine trained models 1 & 2 
+from sklearn.ensemble import StackingClassifier
+# Define stacked classifiers
+estimators = [
+    ('lr', clf1),
+    ('dt', clf2)
+]
+stacked_clf = StackingClassifier(
+    estimators=estimators, final_estimator=LogisticRegression()
+)
+
+# Fit the stacked model on the training data
+stacked_clf.fit(X_train, y_train)
+y_pred_stacked = stacked_clf.predict(X_test)
+# Evaluate performance of stacked model
+f1_stacked = f1_score(y_test, y_pred_stacked, average='weighted', zero_division=0)
+precision_stacked = precision_score(y_test, y_pred_stacked, average='weighted', 
+                                 zero_division=0)
+accuracy_stacked = accuracy_score(y_test, y_pred_stacked)
+# Print metrics to analyze the impact of model stacking on overall performance
+print("\nStacked Model - F1 Score:", f1_stacked)
+print("              - Precision:", precision_stacked)
+print("              - Accuracy:", accuracy_stacked)
+
+# Create confusion matrix (normalize for better visuals) based on stacked model
+cm_stacked = confusion_matrix(y_test, y_pred_stacked, normalize='true')
+# plot confusion matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm_stacked, annot=True)
+plt.title("Confusion Matrix for Stacked Model (Logistic Regression & Decision Tree)")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.show()
