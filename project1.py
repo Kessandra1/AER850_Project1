@@ -95,7 +95,7 @@ print("\nLogistic Regression's best parameters (GridSearchCV):",
 # Model 2: Decision Trees
 from sklearn.tree import DecisionTreeClassifier
 # Define classifier
-clf2 = DecisionTreeClassifier(random_state=42)
+clf2 = DecisionTreeClassifier(class_weight='balanced', random_state=42)
 # Define hyperparameter grid
 param2 = {
     "max_depth": [3, 4],
@@ -115,7 +115,7 @@ print("\nDecision Tree Classifier's best parameters (GridSearchCV):",
 # Model 3: Random Forest
 from sklearn.ensemble import RandomForestClassifier
 # Define classifier
-clf3 = RandomForestClassifier(random_state=42)
+clf3 = RandomForestClassifier(class_weight='balanced', random_state=42)
 from sklearn.ensemble import RandomForestClassifier
 # Define hyperparameter grid
 param3 = {
@@ -142,3 +142,56 @@ rs3.fit(X_train, y_train)
 clf3 = rs3.best_estimator_
 print("Random Forest Classifier's best parameters (RandomizedSearchCV):", 
       rs3.best_params_)
+
+
+
+
+# Step 5: Model Performance Analysis
+print("\n-----Step 5: Model Performance Analysis-----")
+
+# Determine each model's f1 score, precision, and accuracy
+from sklearn.metrics import f1_score, precision_score, accuracy_score
+
+# Model 1: Logistic Regression
+y_pred_clf1 = clf1.predict(X_test)
+f1_clf1 = f1_score(y_test, y_pred_clf1, average='weighted', zero_division=0)
+precision_clf1 = precision_score(y_test, y_pred_clf1, average='weighted', 
+                                 zero_division=0)
+accuracy_clf1 = accuracy_score(y_test, y_pred_clf1)
+# Print metrics to compare to other models
+print("\nModel 1 - F1 Score:", f1_clf1)
+print("        - Precision:", precision_clf1)
+print("        - Accuracy:", accuracy_clf1)
+
+# Model 2: Decision Trees
+y_pred_clf2 = clf2.predict(X_test)
+f1_clf2 = f1_score(y_test, y_pred_clf2, average='weighted', zero_division=0)
+precision_clf2 = precision_score(y_test, y_pred_clf2, average='weighted', 
+                                 zero_division=0)
+accuracy_clf2 = accuracy_score(y_test, y_pred_clf2)
+# Print metrics to compare to other models
+print("Model 2 - F1 Score:", f1_clf2)
+print("        - Precision:", precision_clf2)
+print("        - Accuracy:", accuracy_clf2)
+
+# Model 3: Random Forest
+y_pred_clf3 = clf3.predict(X_test)
+f1_clf3 = f1_score(y_test, y_pred_clf3, average='weighted', zero_division=0)
+precision_clf3 = precision_score(y_test, y_pred_clf3, average='weighted', 
+                                 zero_division=0)
+accuracy_clf3 = accuracy_score(y_test, y_pred_clf3)
+# Print metrics to compare to other models
+print("Model 3 - F1 Score:", f1_clf3)
+print("        - Precision:", precision_clf3)
+print("        - Accuracy:", accuracy_clf3)
+
+# Create confusion matrix (normalize for better visuals) based on model 3
+from sklearn.metrics import confusion_matrix
+cm_clf3 = confusion_matrix(y_test, y_pred_clf3, normalize='true')
+# plot confusion matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm_clf3, annot=True)
+plt.title("Confusion Matrix for Model 3 (Random Forest)")
+plt.xlabel("Predicted Label")
+plt.ylabel("True Label")
+plt.show()
