@@ -52,3 +52,93 @@ corr_matrix = data.corr()
 plt.figure(figsize=(10, 6))
 plt.title("Correlation Matrix")
 sns.heatmap(np.abs(corr_matrix))
+
+
+
+
+# Step 4: Classification Model Development/Engineering
+print("\n-----Step 4: Classification Model Development/Engineering-----")
+
+# Prepare data using Test-Train split
+from sklearn.model_selection import train_test_split
+X = data.drop('Step', axis=1)
+y = data['Step']
+# Split data using Stratification for better distribution
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Assess each model's best hyperparameters using grid search cross-validation
+from sklearn.model_selection import GridSearchCV
+
+# Model 1: Logistic Regression
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+# Define pipeline with scaler and classifier
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression(max_iter=1000, random_state=42))
+])
+# Define hyperparameter grid
+param1 = {
+    "clf__C": [100, 10000000, 100000000]
+}
+# Utilize grid search cross-validation
+gs1 = GridSearchCV(pipe, param_grid=param1, scoring="neg_log_loss", cv=5, 
+                   n_jobs=-1)
+gs1.fit(X_train, y_train)
+clf1 = gs1.best_estimator_
+print("\nLogistic Regression's best parameters (GridSearchCV):", 
+      gs1.best_params_)
+
+# Model 2: Decision Trees
+from sklearn.tree import DecisionTreeClassifier
+# Define classifier
+clf2 = DecisionTreeClassifier(random_state=42)
+# Define hyperparameter grid
+param2 = {
+    "max_depth": [3, 4],
+    "min_samples_split": [2, 3],
+    "min_samples_leaf": [1, 2],
+    "criterion": ["gini", "entropy"],
+    "max_features": [None, "sqrt"]
+}
+# Utilize grid search cross-validation
+gs2 = GridSearchCV(clf2, param_grid=param2, scoring="neg_log_loss", cv=5, 
+                   n_jobs=-1)
+gs2.fit(X_train, y_train)
+clf2 = gs2.best_estimator_
+print("\nDecision Tree Classifier's best parameters (GridSearchCV):", 
+      gs2.best_params_)
+
+# Model 3: Random Forest
+from sklearn.ensemble import RandomForestClassifier
+# Define classifier
+clf3 = RandomForestClassifier(random_state=42)
+from sklearn.ensemble import RandomForestClassifier
+# Define hyperparameter grid
+param3 = {
+    "n_estimators": [10, 30],
+    "max_depth": [None, 2],
+    "min_samples_split": [2, 3],
+    "min_samples_leaf": [1, 2],
+    "criterion": ["gini", "entropy"],
+    "max_features": [None, "sqrt"]
+}
+# Utilize grid search cross-validation
+gs3 = GridSearchCV(clf3, param_grid=param3, scoring="neg_log_loss", cv=5, 
+                   n_jobs=-1)
+gs3.fit(X_train, y_train)
+clf3 = gs3.best_estimator_
+print("\nRandom Forest Classifier's best parameters (GridSearchCV):", 
+      gs3.best_params_)
+# Utilize RandomizedSearchCV.
+from sklearn.model_selection import RandomizedSearchCV
+rs3 = RandomizedSearchCV(clf3, param_distributions=param3, n_iter=20, 
+                         scoring="neg_log_loss", cv=5, n_jobs=-1, 
+                         random_state=42)
+rs3.fit(X_train, y_train)
+clf3 = rs3.best_estimator_
+print("Random Forest Classifier's best parameters (RandomizedSearchCV):", 
+      rs3.best_params_)
