@@ -235,3 +235,29 @@ plt.title("Confusion Matrix for Stacked Model (Logistic Regression & Decision Tr
 plt.xlabel("Predicted Label")
 plt.ylabel("True Label")
 plt.show()
+
+
+
+
+# Step 7: Model Evaluation 
+print("\n-----Step 7: Model Evaluation-----\n")
+import joblib
+
+# Save trained model 3 (Random Forest)
+joblib.dump(clf3, 'model_3.joblib')
+# Load the saved model
+loaded_model = joblib.load('model_3.joblib')
+
+# Predict the corresponding maintenance step
+test_coordinates = np.array([
+    [9.375, 3.0625, 1.51],
+    [6.995, 5.125, 0.3875],
+    [0, 3.0625, 1.93],
+    [9.4, 3, 1.8],
+    [9.4, 3, 1.3]
+])
+predicted_steps = loaded_model.predict(test_coordinates)
+
+# Display predictions
+for val in predicted_steps:
+    print("Predicted Maintenance Step:", val)
